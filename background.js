@@ -40,9 +40,10 @@ function ringIn(tMillis)
 	timeout = setTimeout(ring, alarmDate.getTime() - setDate.getTime());
 
 	chrome.browserAction.setBadgeBackgroundColor({color:greenColor});
-	setInterval(function() {
-		chrome.browserAction.setBadgeText({text: getTimeLeftString()});
-	}, 1000);
+	chrome.browserAction.setBadgeText({text: getTimeLeftString()});
+    setInterval(function() {
+        chrome.browserAction.setBadgeText({text: getTimeLeftString()});
+	}, 10000);
 }
 
 function pause()
@@ -82,13 +83,11 @@ function getTimeLeftString()
    var until = getTimeLeft();
 	var tSecs = parseInt(until / 1000);
 	var tMins = parseInt(tSecs / 60);
-	var secs = tSecs % 60;
 	var tHrs = parseInt(tMins / 60);
 	var mins = tMins % 60;
-	if(secs < 10) secs = "0" + secs;
 	if(mins < 10) mins = "0" + mins;
 	if(tHrs < 10) tHrs = "0" + tHrs;
-	return ((tHrs > 0 ? tHrs + ":" : "") + mins + ":" + secs);
+	return ((tHrs > 0 ? tHrs + ":" : "") + mins);
 }
 
 function didCreateNotification(notificationId) {}
