@@ -41,8 +41,7 @@ function ringIn(tMillis)
     alarmDate.setMilliseconds(alarmDate.getMilliseconds() + millis);
 
     setDate = new Date();
-    // timeout = setTimeout(ring, alarmDate.getTime() - setDate.getTime());
-    timeout = setTimeout(ring, 1000);
+    timeout = setTimeout(ring, alarmDate.getTime() - setDate.getTime());
 
     chrome.browserAction.setBadgeBackgroundColor({color:greenColor});
     chrome.browserAction.setBadgeText({text: getMinutesLeftString()});
@@ -118,7 +117,7 @@ function storageSet(json) {
 
 
 function addToHistory(newDate) {
-    storageGet("history").then(function(oldValue) {
+    return storageGet("history").then(function(oldValue) {
         if (oldValue["history"] == undefined) {
             var newArray = [];
         } else {
@@ -133,11 +132,11 @@ function addToHistory(newDate) {
 }
 
 function logStart() {
-    addToHistory("STARTED - " + (new Date()).toString());
+    return addToHistory("STARTED - " + (new Date()).toString());
 }
 
 function logEnd() {
-    addToHistory("ENDED - " + (new Date()).toString());
+    return addToHistory("ENDED - " + (new Date()).toString());
 }
 
 Number.prototype.pad = function(size) {
@@ -173,11 +172,11 @@ function ring()
         this.close();
     };
 
-    logEnd();
+    var waitToLog = logEnd();
 
     runsToday++;
     if (runsToday % 5 == 0) {
-        logDownload();
+        waitToLog.then(logDownload);
     }
 
     alarmSound.play();
