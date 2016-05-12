@@ -1,5 +1,6 @@
 var timeout;
 var interval;
+var badgeInterval;
 
 var setDate;
 var pauseDate;
@@ -13,6 +14,8 @@ var alarmSound = new Audio("chime.mp3");
 
 function setAlarm(tMillis)
 {
+    logStart();
+
     interval = tMillis;
     ringIn(tMillis + guiLagAdjustment);
 }
@@ -42,7 +45,7 @@ function ringIn(tMillis)
 
     chrome.browserAction.setBadgeBackgroundColor({color:greenColor});
     chrome.browserAction.setBadgeText({text: getMinutesLeftString()});
-    setInterval(function() {
+    badgeInterval = setInterval(function() {
         chrome.browserAction.setBadgeText({text: getMinutesLeftString()});
     }, 10000);
 
@@ -100,16 +103,55 @@ function getMinutesLeftString() {
     return timeLeftString.substring(0, timeLeftString.length - 3);
 }
 
+function storageGet(json) {
+    return new Promise(function(resolve, reject) {
+        chrome.storage.local.get(json, function(result) { resolve(result); });
+    });
+}
+
+function storageSet(json) {
+    return new Promise(function(resolve, reject) {
+        chrome.storage.local.set(json, function() { resolve(json); });
+    });
+}
+
+
+function addToHistory(newDate) {
+    storageGet("history").then(function(oldValue) {
+        if (oldValue["history"] == undefined) {
+            var newArray = [];
+        } else {
+            newArray = oldValue["history"];
+        }
+        newArray.push(newDate);
+        return storageSet({"history": newArray});
+    }).then(function(finalResult) {
+        console.log("Success");
+        console.log(finalResult);
+    });
+}
+
+function logStart() {
+    addToHistory("STARTED - " + (new Date()).toString());
+}
+
+function logEnd() {
+    addToHistory("ENDED - " + (new Date()).toString());
+}
+
+
 function didCreateNotification(notificationId) {}
+
 
 function ring()
 {
-
     var notification = new Notification("Timer", {body: "Time\'s up!", icon: "img/48.png" });
     notification.onclick = function() {
         window.focus();
         this.close();
     };
+
+    logEnd();
 
     alarmSound.play();
     turnOff();
@@ -118,6 +160,7 @@ function ring()
 function turnOff()
 {
     clearTimeout(timeout);
+    clearTimeout(badgeInterval);
     interval = 0;
     alarmDate = null;
     pauseDate = null;
