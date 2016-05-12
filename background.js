@@ -37,12 +37,13 @@ function ringIn(tMillis)
 	alarmDate.setMilliseconds(alarmDate.getMilliseconds() + millis);
 
 	setDate = new Date();
-	timeout = setTimeout(ring, alarmDate.getTime() - setDate.getTime());
+    // timeout = setTimeout(ring, alarmDate.getTime() - setDate.getTime());
+	timeout = setTimeout(ring, 1000);
 
 	chrome.browserAction.setBadgeBackgroundColor({color:greenColor});
-	chrome.browserAction.setBadgeText({text: getTimeLeftString()});
+	chrome.browserAction.setBadgeText({text: getMinutesLeftString()});
     setInterval(function() {
-        chrome.browserAction.setBadgeText({text: getTimeLeftString()});
+        chrome.browserAction.setBadgeText({text: getMinutesLeftString()});
 	}, 10000);
 }
 
@@ -80,28 +81,36 @@ function getTimeLeftPercent()
 
 function getTimeLeftString()
 {
-   var until = getTimeLeft();
-	var tSecs = parseInt(until / 1000);
-	var tMins = parseInt(tSecs / 60);
-	var tHrs = parseInt(tMins / 60);
-	var mins = tMins % 60;
-	if(mins < 10) mins = "0" + mins;
-	if(tHrs < 10) tHrs = "0" + tHrs;
-	return ((tHrs > 0 ? tHrs + ":" : "") + mins);
+    var until = getTimeLeft();
+    var tSecs = parseInt(until / 1000);
+    var tMins = parseInt(tSecs / 60);
+    var tHrs = parseInt(tMins / 60);
+    var secs = tSecs % 60;
+    var mins = tMins % 60;
+    var hrs = tHrs;
+    if(mins < 10) mins = "0" + mins;
+    if(hrs < 10) hrs = "0" + hrs;
+    if(secs < 10) secs = "0" + secs;
+    return (hrs > 0 ? hrs + ":" : "") + mins + ":" + secs;
+}
+
+function getMinutesLeftString() {
+    var timeLeftString = getTimeLeftString();
+    return timeLeftString.substring(0, timeLeftString.length - 3);
 }
 
 function didCreateNotification(notificationId) {}
 
 function ring()
 {
-   var options = {
-      type: "basic",
-      title: "Timer",
-      message: "Time\'s up!",
-      iconUrl: "img/48.png",
-      priority: 2
-   }
-   chrome.notifications.create("", options, didCreateNotification);
+
+    var notification = new Notification("Timer", {body: "Time\'s up!", icon: "img/48.png" });
+    notification.onclick = function() {
+        window.focus();
+        this.close();
+    };
+
+   // chrome.notifications.create("", options, didCreateNotification);
 
    alarmSound.play();
 	turnOff();
