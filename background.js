@@ -45,6 +45,7 @@ function ringIn(tMillis)
     setInterval(function() {
         chrome.browserAction.setBadgeText({text: getMinutesLeftString()});
 	}, 10000);
+
 }
 
 function pause()
@@ -109,8 +110,6 @@ function ring()
         window.focus();
         this.close();
     };
-
-   // chrome.notifications.create("", options, didCreateNotification);
 
    alarmSound.play();
 	turnOff();
