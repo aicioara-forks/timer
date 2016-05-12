@@ -145,7 +145,7 @@ function setTimer()
 		show("modify");
       show("display");
 		refreshDisplay();
-      window.close();
+   	window.close();
 	}
 	else
 		bgpage.error();
