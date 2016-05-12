@@ -23,8 +23,9 @@
   "offline_enabled": true,
 
   "permissions": [
-    "notifications",
-    "storage"
+    "notifications", // needed for letting you know when it's done
+    "storage", // Needed to store history
+    "downloads" // Needed to download history
   ],
 
   "web_accessible_resources": [

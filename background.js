@@ -5,6 +5,7 @@ var badgeInterval;
 var setDate;
 var pauseDate;
 var alarmDate;
+var runsToday = 0;
 
 var greenColor = [76, 187, 23, 255];
 var yellowColor = [250, 150, 0, 255];
@@ -139,6 +140,27 @@ function logEnd() {
     addToHistory("ENDED - " + (new Date()).toString());
 }
 
+Number.prototype.pad = function(size) {
+    var s = String(this);
+    while (s.length < (size)) {s = "0" + s;}
+    return s;
+}
+
+function formatDate(x) {
+    return x.getFullYear() + "-" + (x.getMonth() + 1).pad(2) + "-" + (x.getDate()).pad(2) + "_" + x.getHours().pad(2) + "-" + x.getMinutes().pad(2) + "-" + x.getSeconds().pad(2);
+}
+
+function logDownload() {
+    chrome.storage.local.get(null, function(items) { // null implies all items
+        var result = JSON.stringify(items);
+        var url = 'data:application/json;base64,' + btoa(result);
+        chrome.downloads.download({
+            url: url,
+            filename: "intervals-" + formatDate(new Date()) + ".json"
+        });
+    });
+}
+
 
 function didCreateNotification(notificationId) {}
 
@@ -152,6 +174,11 @@ function ring()
     };
 
     logEnd();
+
+    runsToday++;
+    if (runsToday % 5 == 0) {
+        logDownload();
+    }
 
     alarmSound.play();
     turnOff();
