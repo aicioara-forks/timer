@@ -128,27 +128,27 @@ function swapBack()
 
 function setTimer()
 {
-	// make sure we're dealing with text not fields
-	if(editing)
-		swapBack();
+    // make sure we're dealing with text not fields
+    if(editing)
+        swapBack();
 
-	// SET background timer for selected number
-	// HIDE settings, DISPLAY countdown
+    // SET background timer for selected number
+    // HIDE settings, DISPLAY countdown
 
-	var num = getChoice();
+    var num = getChoice();
 
-	// set timer, hide settings, display reset button
-	if(isValid(num))
-	{
-		bgpage.setAlarm(num * 60000);
-		hide("settings");
-		show("modify");
-      show("display");
-		refreshDisplay();
-   	window.close();
-	}
-	else
-		bgpage.error();
+    // set timer, hide settings, display reset button
+    if(isValid(num))
+    {
+        bgpage.setAlarm(num * 60000);
+        hide("settings");
+        show("modify");
+        show("display");
+        refreshDisplay();
+        window.close();
+    }
+    else
+        bgpage.error();
 }
 
 // Returns true if 0 <= amt <= 240

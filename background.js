@@ -19,32 +19,32 @@ function setAlarm(tMillis)
 
 function ringIn(tMillis)
 {
-	clearTimeout(timeout);
-	pauseDate = null;
+    clearTimeout(timeout);
+    pauseDate = null;
 
-	var tSecs = parseInt(tMillis / 1000);
-	var tMins = parseInt(tSecs / 60);
-	var secs = tSecs % 60;
-	var tHrs = parseInt(tMins / 60);
-	var mins = tMins % 60;
-	var millis = tMillis % 1000;
+    var tSecs = parseInt(tMillis / 1000);
+    var tMins = parseInt(tSecs / 60);
+    var secs = tSecs % 60;
+    var tHrs = parseInt(tMins / 60);
+    var mins = tMins % 60;
+    var millis = tMillis % 1000;
 
-	alarmDate = new Date();
-	// alarmDate.setTime(alarmDate.getTime() + millis);
-	alarmDate.setHours(alarmDate.getHours() + tHrs);
-	alarmDate.setMinutes(alarmDate.getMinutes() + mins);
-	alarmDate.setSeconds(alarmDate.getSeconds() + secs);
-	alarmDate.setMilliseconds(alarmDate.getMilliseconds() + millis);
+    alarmDate = new Date();
+    // alarmDate.setTime(alarmDate.getTime() + millis);
+    alarmDate.setHours(alarmDate.getHours() + tHrs);
+    alarmDate.setMinutes(alarmDate.getMinutes() + mins);
+    alarmDate.setSeconds(alarmDate.getSeconds() + secs);
+    alarmDate.setMilliseconds(alarmDate.getMilliseconds() + millis);
 
-	setDate = new Date();
+    setDate = new Date();
     // timeout = setTimeout(ring, alarmDate.getTime() - setDate.getTime());
-	timeout = setTimeout(ring, 1000);
+    timeout = setTimeout(ring, 1000);
 
-	chrome.browserAction.setBadgeBackgroundColor({color:greenColor});
-	chrome.browserAction.setBadgeText({text: getMinutesLeftString()});
+    chrome.browserAction.setBadgeBackgroundColor({color:greenColor});
+    chrome.browserAction.setBadgeText({text: getMinutesLeftString()});
     setInterval(function() {
         chrome.browserAction.setBadgeText({text: getMinutesLeftString()});
-	}, 10000);
+    }, 10000);
 
 }
 
@@ -111,8 +111,8 @@ function ring()
         this.close();
     };
 
-   alarmSound.play();
-	turnOff();
+    alarmSound.play();
+    turnOff();
 }
 
 function turnOff()
