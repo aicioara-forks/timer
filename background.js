@@ -13,8 +13,8 @@ var alarmSound = new Audio("chime.mp3");
 
 function setAlarm(tMillis)
 {
-	interval = tMillis;
-	ringIn(tMillis + guiLagAdjustment);
+    interval = tMillis;
+    ringIn(tMillis + guiLagAdjustment);
 }
 
 function ringIn(tMillis)
@@ -117,15 +117,15 @@ function ring()
 
 function turnOff()
 {
-	clearTimeout(timeout);
-	interval = 0;
-	alarmDate = null;
-   pauseDate = null;
-   setDate = null;
-	chrome.browserAction.setBadgeText({text: ""});
+    clearTimeout(timeout);
+    interval = 0;
+    alarmDate = null;
+    pauseDate = null;
+    setDate = null;
+    chrome.browserAction.setBadgeText({text: ""});
 }
 
 function error()
 {
-	alert("Please enter a number between 1 and 240.");
+    alert("Please enter a number between 1 and 240.");
 }
