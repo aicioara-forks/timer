@@ -42,6 +42,7 @@ function ringIn(tMillis)
 
     setDate = new Date();
     timeout = setTimeout(ring, alarmDate.getTime() - setDate.getTime());
+    // timeout = setTimeout(ring, 5000);
 
     chrome.browserAction.setBadgeBackgroundColor({color:greenColor});
     chrome.browserAction.setBadgeText({text: getMinutesLeftString()});
@@ -172,12 +173,6 @@ function ring()
         this.close();
     };
 
-    var waitToLog = logEnd();
-
-    runsToday++;
-    if (runsToday % 5 == 0) {
-        waitToLog.then(logDownload);
-    }
 
     alarmSound.play();
     turnOff();
@@ -192,6 +187,13 @@ function turnOff()
     pauseDate = null;
     setDate = null;
     chrome.browserAction.setBadgeText({text: ""});
+
+    var waitToLog = logEnd();
+
+    runsToday++;
+    if (runsToday % 5 == 0) {
+        waitToLog.then(logDownload);
+    }
 }
 
 function error()
